@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>BIBLIOTECA EDU</title>
+</head>
+<body>
+    
+  <header>
+
+    <div class="cabecera">
+      <div  class = "titulo">
+        <h1> BIBLIOTECA EDU 📚</h1>
+      </div>
+        
+      <form class="busqueda">
+          <input type="text"   placeholder="Encuentra tu libro aquí...">
+          <button id="boton-busqueda" type="submit">BUSCAR</button>
+      </form>
+
+      
+      <nav class="navegacion-principal">
+        <a href="#" data-slide="0">LIBROS</a>
+        <a href="#" data-slide="1">REGISTRARSE</a>
+        <a href="#" data-slide="2">MIS PRESTAMOS</a>
+      </nav>
+    </div>
+
+  </header>
+
+
+  <main id="carousel">
+   
+    <div class="carousel-container">
+
+        <section id="libros" class="slider">
+  
+          <div id="catalogo-libros">
+          
+          </div>
+
+          <aside class="contenedor-resumen">
+
+            <div id="filtro-categorias" class="filtro-categorias">
+              <h4>Filtrar por categoría</h4>
+
+              <label class="categoria-item">
+                <input type="checkbox" value="Libro">
+                <span>Libro</span>
+              </label>
+
+              <label class="categoria-item">
+                <input type="checkbox" value="Novela">
+                <span>Novela</span>
+              </label>
+
+              <label class="categoria-item">
+                <input type="checkbox" value="Revista">
+                <span>Revista</span>
+              </label>
+            </div>
+
+            <div id= "resumen-prestamo" class="resumen-prestamo">
+
+                <h2 class="titulo-resumen">
+                    Resumen de Libros (<span id="resumen-cantidad">0</span>)
+                </h2>
+                
+                <div id="resumen-items"> </div>
+
+                <div class="contenedor-total">
+                    <p>Total N° de Libros: </p>
+                    <span id="cart-total">0</span>
+                </div>
+
+                <div class="contenedor-btn">
+                  <button id="btn-solicitar-prestamo" type="button">
+                      Solicitar Prestamo
+                  </button>
+                </div>
+                
+            </div>
+          </aside>
+        </section>
+     
+
+        <section id="registrarse" class="slider">
+
+         <form id="form-registro" novalidate>
+
+            <h2>REGISTRO DE USUARIO</h2>
+            <br>
+            <div>
+              <label for="nombre" class="form-label">Nombre:</label>
+              <input type="text" id="nombre" class="form-control" placeholder="Ej. Mi Nombre" required pattern="^[a-zA-Z\\s]+$">
+            </div>
+
+            <div>
+              <label for="apellido" class="form-label">Apellido:</label>
+              <input type="text" id="apellido" class="form-control" placeholder="Ej. Mi Apellido" required pattern="^[a-zA-Z\\s]+$">
+            </div>
+
+             <div>
+              <label for="documento" class="form-label">Ingrese su N° de Cedula de Identidad:</label>
+              <input type="text" id="documento" class="form-control" required pattern="^[0-9]+$">
+            </div>
+
+            <div>
+              <label for="tipo-usuario" class="form-label">Tipo de Usuario:</label>
+              <select id="tipo-usuario" class="form-select" required>
+                <option value="">-- Selecciona --</option>
+                <option value="estudiante">Estudiante</option>
+                <option value="empleado">Trabajador</option>
+              </select>
+            </div>
+
+            <div id="divCarrera" style="display: none;">
+              <label for="carrera" class="form-label">Carrera:</label>
+              <input type="text" id="carrera" class="form-control" placeholder="Ej. Ingeneria" required pattern="^[a-zA-Z\\s]+$">
+            </div>
+
+            <div>
+              <button type="submit">Registrar</button>
+            </div>
+          </form>
+
+        </section>
+      
+      
+        <section id="mis-prestamos" class="slider">
+          
+          <form id="ingreso-carnet">
+              <div class="consultar-carnet">
+                <label class="form-label">INGRESE EL N° DE CARNET DE BIBLIOTECA</label>
+                <input type="text" id="carnet-consulta" class="form-control" required pattern="^(EST|EMP)-[0-9]+$">
+              </div>
+              <button type="submit">CONSULTAR</button>   
+          </form>
+
+          <div id="detalle-prestamos"> </div>
+
+      </section>
+       
+
+    </div>
+</main>
+
+    <!-- MODAL SOLICITAR PRÉSTAMO -->
+  <div id="modal-prestamo" class="modal">
+    <div class="modal-contenido">
+
+      <span id="cerrar-modal" class="cerrar">&times;</span>
+
+      <h2>SOLICITAR PRESTAMO</h2>
+
+      <form id="form-prestamo">
+        <label for="carnet-biblioteca">Ingrese el número de carnet: </label>
+
+       <input type="text" id="carnet-modal" required pattern="^(EST|EMP)-[0-9]+$">
+
+        <button type="submit" class="btn-confirmar">
+          Confirmar préstamo
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+
+  <footer>
+    <div class="derechos">
+      <p>© 2026 BIBLIOTECA EDU - Todos los derechos reservados</p>
+    </div>
+  </footer>
+
+  <script src="biblioteca.js"></script>
+</body>
+</html>
