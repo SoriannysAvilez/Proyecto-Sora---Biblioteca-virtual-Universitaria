@@ -653,17 +653,32 @@ function obtenerEstadoPrestamo(fechaDevolucion) {
   return { tipo: "activo", mensaje: "✅ Sus préstamos están dentro del plazo permitido." };
 }
 
+
+
 // ===== FILTRO DE CATEGORÍAS =====
+
+const inputBusqueda = document.getElementById("input-busqueda");
+const formBusqueda = document.querySelector(".busqueda");
 
 const checkboxesCategorias = document.querySelectorAll(
   "#filtro-categorias input[type='checkbox']"
 );
 
-checkboxesCategorias.forEach(cb => {
-  cb.addEventListener("change", filtrarPorCategoria);
+// EVENTOS
+inputBusqueda.addEventListener("input", aplicarFiltros);
+
+formBusqueda.addEventListener("submit", e => {
+  e.preventDefault();
+  aplicarFiltros();
 });
 
-function filtrarPorCategoria() {
+checkboxesCategorias.forEach(cb => {
+  cb.addEventListener("change", aplicarFiltros);
+});
+
+function aplicarFiltros() {
+  const texto = inputBusqueda.value.toLowerCase().trim();
+
   const categoriasSeleccionadas = Array.from(checkboxesCategorias)
     .filter(cb => cb.checked)
     .map(cb => cb.value.toLowerCase().trim());
@@ -671,29 +686,31 @@ function filtrarPorCategoria() {
   const tarjetas = document.querySelectorAll(".libro-card");
 
   tarjetas.forEach(card => {
-    const categoriaLibro = card.dataset.categoria
-      .toLowerCase()
-      .trim();
+    const categoriaLibro = card.dataset.categoria.toLowerCase().trim();
 
-    if (categoriasSeleccionadas.length === 0) {
-      card.style.display = "";
-    } 
-    else if (categoriasSeleccionadas.includes(categoriaLibro)) {
-      card.style.display = "";
-    } 
-    else {
-      card.style.display = "none";
-    }
+    const titulo = card.querySelector(".libro-titulo")
+      .textContent.toLowerCase();
+
+    const autor = card.querySelector(".autor")
+      .textContent.toLowerCase();
+
+    const coincideCategoria =
+      categoriasSeleccionadas.length === 0 ||
+      categoriasSeleccionadas.includes(categoriaLibro);
+
+    const coincideTexto =
+      titulo.includes(texto) || autor.includes(texto);
+
+    card.style.display =
+      coincideCategoria && coincideTexto ? "" : "none";
   });
 }
 
 
-// Escuchar cambios y se reincicie el filtro al cambio de pagina
-enlaces.forEach(enlace => {
-  enlace.addEventListener("click", () => {
-    checkboxesCategorias.forEach(cb => cb.checked = false);
-    filtrarPorCategoria();
-  });
-});
 
-//revisar filtro xq no filtra bien y configurra barra de busqueda
+
+
+
+
+
+ 
