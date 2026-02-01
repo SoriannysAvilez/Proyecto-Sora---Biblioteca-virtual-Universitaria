@@ -47,27 +47,45 @@ enlaces.forEach(enlace => {
 /////FUNCIONES PRINCIPALES
 
 const libros = [
-    { id: 1, nombre: "Cien años de Soledad", autor: "Gabriel García Márquez", categoria: "Novela", imagen: "https://www.bibliotecanacional.gov.co/es-co/colecciones/biblioteca-digital/gaboteca/Imagenes/cien_aosdesolbsillo.jpg", cantidad: 3},
-    { id: 2, nombre: "Gramática de la lengua castellana", autor: "Andres Bello", categoria: "Libro", imagen: "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1677791699i/490908.jpg", cantidad:3 },
-    { id: 3, nombre: "Ingenio Jul-Dic 2024", autor:"COMPROTIC / UNEFA", categoria: "Revista", imagen: "https://revistaingenio.org/J2/public/journals/1/cover_issue_57_es_ES.jpg", cantidad:5 },
-    { id: 4, nombre: "Doña Barbara", autor: "Romulo Gallegos", categoria: "Novela", imagen: "https://www.polifemo.com/static/img/portadas/_visd_0000JPG028J7.jpg", cantidad:3},
-    { id: 5, nombre: "El Derecho Administrativo en la Constitución", autor: "Allan Brewer-Carías", categoria: "Libro", imagen: "https://m.media-amazon.com/images/I/61KZsqj9PWL._AC_UF1000,1000_QL80_.jpg", cantidad: 2},
-    { id: 6, nombre: "De Auditu", autor: "COMPROTIC / UNEFA", categoria: "Revista", imagen: "https://revistauirtus.org/public/journals/2/journalThumbnail_es_ES.jpg", cantidad:5 },
-    { id: 7, nombre: "Casas Muertas", autor:"Miguel Otero Silva", categoria: "Novela", imagen: "https://m.media-amazon.com/images/I/416fkYPrloL._AC_UF1000,1000_QL80_.jpg", cantidad:2},
-    { id: 8, nombre: "Formulario de Mat. Universitarias", autor: "E. Navarro", categoria: "Libro", imagen: "https://http2.mlstatic.com/D_NQ_NP_938578-MLV49638999531_042022-O.webp", cantidad: 5},
-    { id: 9, nombre: "Defensa y Patria Vol.III, N°2 Mayo 2025 Edición Especial Postdoctorado", autor:"COMPROTIC / UNEFA", categoria: "Revista", imagen: "https://defensaypatria.org/public/journals/5/cover_issue_61_es_ES.jpg", cantidad:5 },  
-    { id: 10, nombre: "El Alquimista", autor:"Paulo Coelho", categoria: "Novela", imagen: "https://www.resumenlibro.com/img/libros/el-alquimista.jpg", cantidad:3},
-    { id: 11, nombre: "Cálculo (Trascendentes tempranas)", autor:"James Stewart", categoria: "Libro", imagen: "https://cengagelatam.editorialdc.com/wp-content/uploads/2024/08/9786075265483.jpg", cantidad:4},
-    { id: 12, nombre: "Gestión y Gerencia", autor:"UCLA", categoria: "Revista", imagen: "https://revistas.uclave.org/public/journals/10/journalThumbnail_es_ES.jpg", cantidad: 3},
-    { id: 13, nombre: "Don Quijote de la Mancha", autor:"Miguel de Cervantes", categoria: "Novela", imagen: "https://www.elejandria.com/covers/Don_Quijote_de_la_Mancha-Cervantes_Miguel-lg.png", cantidad:2 },
-    { id: 14, nombre: "Auditoria en Sistemas Computacionales", autor:"Carlos Muñoz Lazo", categoria: "Libro", imagen: "https://deingenierias.com/wp-content/uploads/Libro-Auditor%C3%ADa-en-sistemas-computacionales.jpg", cantidad: 3},
-    { id: 15, nombre: "Red de Investigación Educativa", autor:"UCLA", categoria: "Revista", imagen: "https://revistas.uclave.org/public/journals/19/journalThumbnail_es_ES.jpg", cantidad:4 },
-    { id: 16, nombre: "Introd. a la Ing. en Sistemas Computacionales y al DOO", autor:"Bruno López Takeyas", categoria: "Libro", imagen: "https://nlaredo.tecnm.mx/takeyas/Libro/PortadaDOO.jpg", cantidad:4}     
+    { id: 1, nombre: "Cien años de Soledad", autor: "Gabriel García Márquez", categoria: "Novela", imagen: "https://www.bibliotecanacional.gov.co/es-co/colecciones/biblioteca-digital/gaboteca/Imagenes/cien_aosdesolbsillo.jpg", cantidad: 3, deteriorados: 0, estado: "activo"},
+    { id: 2, nombre: "Gramática de la lengua castellana", autor: "Andres Bello", categoria: "Libro", imagen: "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1677791699i/490908.jpg", cantidad:3, deteriorados: 0, estado: "activo" },
+    { id: 3, nombre: "Ingenio Jul-Dic 2024", autor:"COMPROTIC / UNEFA", categoria: "Revista", imagen: "https://revistaingenio.org/J2/public/journals/1/cover_issue_57_es_ES.jpg", cantidad:5, deteriorados: 0, estado: "activo" },
+    { id: 4, nombre: "Doña Barbara", autor: "Romulo Gallegos", categoria: "Novela", imagen: "https://www.polifemo.com/static/img/portadas/_visd_0000JPG028J7.jpg", cantidad:3, deteriorados: 0, estado: "activo"},
+    { id: 5, nombre: "El Derecho Administrativo en la Constitución", autor: "Allan Brewer-Carías", categoria: "Libro", imagen: "https://m.media-amazon.com/images/I/61KZsqj9PWL._AC_UF1000,1000_QL80_.jpg", cantidad: 2, deteriorados: 0, estado: "activo"},
+    { id: 6, nombre: "De Auditu", autor: "COMPROTIC / UNEFA", categoria: "Revista", imagen: "https://revistauirtus.org/public/journals/2/journalThumbnail_es_ES.jpg", cantidad:5, deteriorados: 0, estado: "activo" },
+    { id: 7, nombre: "Casas Muertas", autor:"Miguel Otero Silva", categoria: "Novela", imagen: "https://m.media-amazon.com/images/I/416fkYPrloL._AC_UF1000,1000_QL80_.jpg", cantidad:2, deteriorados: 0, estado: "activo"},
+    { id: 8, nombre: "Formulario de Mat. Universitarias", autor: "E. Navarro", categoria: "Libro", imagen: "https://http2.mlstatic.com/D_NQ_NP_938578-MLV49638999531_042022-O.webp", cantidad: 5, deteriorados: 0, estado: "activo"},
+    { id: 9, nombre: "Defensa y Patria Vol.III, N°2 Mayo 2025 Edición Especial Postdoctorado", autor:"COMPROTIC / UNEFA", categoria: "Revista", imagen: "https://defensaypatria.org/public/journals/5/cover_issue_61_es_ES.jpg", cantidad:5, deteriorados: 0, estado: "activo" },  
+    { id: 10, nombre: "El Alquimista", autor:"Paulo Coelho", categoria: "Novela", imagen: "https://www.resumenlibro.com/img/libros/el-alquimista.jpg", cantidad:3, deteriorados: 0, estado: "activo"},
+    { id: 11, nombre: "Cálculo (Trascendentes tempranas)", autor:"James Stewart", categoria: "Libro", imagen: "https://cengagelatam.editorialdc.com/wp-content/uploads/2024/08/9786075265483.jpg", cantidad:4, deteriorados: 0, estado: "activo"},
+    { id: 12, nombre: "Gestión y Gerencia", autor:"UCLA", categoria: "Revista", imagen: "https://revistas.uclave.org/public/journals/10/journalThumbnail_es_ES.jpg", cantidad: 3, deteriorados: 0, estado: "activo"},
+    { id: 13, nombre: "Don Quijote de la Mancha", autor:"Miguel de Cervantes", categoria: "Novela", imagen: "https://www.elejandria.com/covers/Don_Quijote_de_la_Mancha-Cervantes_Miguel-lg.png", cantidad:2, deteriorados: 0, estado: "activo" },
+    { id: 14, nombre: "Auditoria en Sistemas Computacionales", autor:"Carlos Muñoz Lazo", categoria: "Libro", imagen: "https://deingenierias.com/wp-content/uploads/Libro-Auditor%C3%ADa-en-sistemas-computacionales.jpg", cantidad: 3, deteriorados: 0, estado: "activo"},
+    { id: 15, nombre: "Red de Investigación Educativa", autor:"UCLA", categoria: "Revista", imagen: "https://revistas.uclave.org/public/journals/19/journalThumbnail_es_ES.jpg", cantidad:4, deteriorados: 0, estado: "activo" },
+    { id: 16, nombre: "Introd. a la Ing. en Sistemas Computacionales y al DOO", autor:"Bruno López Takeyas", categoria: "Libro", imagen: "https://nlaredo.tecnm.mx/takeyas/Libro/PortadaDOO.jpg", cantidad:4, deteriorados: 0, estado: "activo"}     
 ];
 
 let resumenPrestamo = JSON.parse(localStorage.getItem("resumenPrestamo")) || [];
 
 let librosPrestados = JSON.parse(localStorage.getItem("librosPrestados")) || [];
+
+// 1. CARGA INICIAL
+// Cargamos o inicializamos con el array por defecto (libros)
+let inventario = JSON.parse(localStorage.getItem("inventarioLibros")) || [...libros];
+let historial = JSON.parse(localStorage.getItem("historialLibros")) || [];
+
+// Si es la primera vez (no hay nada en localStorage), guardamos la base inicial
+if (!localStorage.getItem("inventarioLibros")) {
+    localStorage.setItem("inventarioLibros", JSON.stringify(inventario));
+}
+
+// 2. FUNCIÓN ÚNICA DE PERSISTENCIA
+// Usa esta función siempre al final de agregar, modificar o eliminar
+function sincronizarLocalStorage() {
+    localStorage.setItem("inventarioLibros", JSON.stringify(inventario));
+    localStorage.setItem("historialLibros", JSON.stringify(historial));
+}
+
 
 //FUNCIONES PARA REGISTRO DE USUARIO///
 
@@ -84,34 +102,27 @@ function mostrarCatalogo() {
     const contenedorCat = document.getElementById("catalogo-libros");
     contenedorCat.innerHTML = "";
 
-    libros.forEach(libro => {
-        const article = document.createElement("article");
-        article.className = "libro-card";
-        article.dataset.categoria = libro.categoria;
+    // USAR 'inventario' en lugar de 'libros'
+    inventario.forEach(libro => {
+        if (libro.estado === "activo") { // Solo mostrar activos
+            const article = document.createElement("article");
+            article.className = "libro-card";
+            article.dataset.categoria = libro.categoria;
 
-        article.innerHTML = `
-            <img src="${libro.imagen}" class="libro-imagen">
-
-            <div class="libro-separador"></div>
-
-            <div class="libro-info">
-                <p class="libro-categoria">${libro.categoria}</p>
-                <h3 class="libro-titulo">${libro.nombre}</h3>
-                <p class="libro-autor"> Autor: <span class="autor">${libro.autor}</span></p>
-                
-            </div>
-
-            <button 
-                class="btn-prestamo"
-                data-id="${libro.id}">
-                Solicitar
-            </button>
-        `;
-
-        contenedorCat.appendChild(article);
+            article.innerHTML = `
+                <img src="${libro.imagen || 'https://via.placeholder.com/150'}" class="libro-imagen">
+                <div class="libro-separador"></div>
+                <div class="libro-info">
+                    <p class="libro-categoria">${libro.categoria}</p>
+                    <h3 class="libro-titulo">${libro.nombre}</h3>
+                    <p class="libro-autor"> Autor: <span class="autor">${libro.autor}</span></p>
+                </div>
+                <button class="btn-prestamo" data-id="${libro.id}">Solicitar</button>
+            `;
+            contenedorCat.appendChild(article);
+        }
     });
-
-  }
+}
 
   //DIBUJAR ITEMS DEL RESUMEN DE PRESTAMOS//
 function renderizarResumen() {
@@ -176,7 +187,7 @@ function renderizarResumen() {
 ///1///
 function agregarAlResumen(id) {
       
-    const libroSeleccionado = libros.find(p => p.id === id);
+    const libroSeleccionado = inventario.find(p => p.id === id);
       
       
       const itemEnResumen = resumenPrestamo.find(p => p.id === id);
@@ -269,7 +280,7 @@ function solicitarPrestamo() {
   }
 
   for (const item of resumenPrestamo) {
-    const libro = libros.find(l => l.id === item.id);
+    const libro = inventario.find(l => l.id === item.id);
     const yaPrestados = obtenerPrestados(item.id);
     const disponibles = libro.cantidad - yaPrestados;
 
@@ -570,7 +581,7 @@ if (hayVencido) {
 
   ${prestamosUsuario.map(p => `
     <div class="hoja-prestamo">
-      <h3>📄 Hoja de Préstamo</h3>
+      <h3>📄 Planilla de Préstamo</h3>
 
       <p><strong>Carnet:</strong> ${p.carnet}</p>
       <p><strong>Usuario:</strong> ${p.nombreCompleto}</p>
@@ -706,11 +717,369 @@ function aplicarFiltros() {
   });
 }
 
+//ACCESO DE USUARIOS AL PERFIL EMPLEADO
+
+// 2. Definición del Arreglo de Usuarios
+const usuariosTrabajadores = [
+    { usuario: "admin", clave: "1234", nombre: "Administrador" },
+    { usuario: "empleado01", clave: "unefa2026", nombre: "Juan Pérez" }
+];
+
+// 3. Escuchador de Eventos (El reemplazo del onclick)
+const formEmpleado = document.getElementById("ingreso-empleado");
+const inputUser = document.getElementById("usuario");
+const inputPass = document.getElementById("contrasena");
+
+formEmpleado.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const userVal = inputUser.value.trim();
+  const passVal = inputPass.value;
+
+  const usuarioValido = usuariosTrabajadores.find(u =>
+    u.usuario === userVal && u.clave === passVal
+  );
+
+  if (usuarioValido) {
+    alert(`¡Acceso concedido! Bienvenido ${usuarioValido.nombre}`);
+
+    // 🔹 MOVER CARRUSEL A PERFIL EMPLEADO
+    contenedor.style.transform = "translateX(-300%)";
+    enlaces.forEach(a => a.classList.remove("activo"));
+    enlaces[3].classList.add("activo");
+
+    // 🔹 OCULTAR LOGIN
+    document.getElementById("ingreso-empleado")
+      .style.setProperty("display", "none", "important");
+
+    // 🔹 MOSTRAR PANEL
+    document.getElementById("contenedor-botones")
+      .style.setProperty("display", "flex", "important");
+
+    document.getElementById("contenedor-inicial")
+      .style.setProperty("display", "flex", "important");
+
+    document.getElementById("contenedor-historial")
+      .style.setProperty("display", "flex", "important");
+
+  } else {
+    alert("Credenciales incorrectas");
+    inputPass.value = "";
+  }
+});
+
+///// BOTN SALIR DE LA SESION DE EMPLEADO
+
+// 4. Función para cambiar la vista (Entrar)
+function mostrarPanelGestion() {
+    // Ocultamos el cuadro de login
+    document.getElementById('ingreso-empleado').style.display = 'none';
+    
+    // Mostramos la cabecera (botones de gestión y salir)
+    document.getElementById('contenedor-botones').style.display = 'flex';
+    
+    // Mostramos las tablas de inventario e historial
+    document.getElementById('contenedor-inicial').style.display = 'flex';
+    document.getElementById('contenedor-historial').style.display = 'flex';
+}
+
+// 5. Función para Cerrar Sesión (Salir)
+const btnSalir = document.querySelector('.salir');
+
+btnSalir.addEventListener('click', () => {
+    // 1. Volvemos a ocultar todo el panel de gestión
+    document.getElementById('contenedor-botones').style.setProperty("display", "none", "important");
+    document.getElementById('contenedor-inicial').style.setProperty("display", "none", "important");
+    document.getElementById('contenedor-historial').style.setProperty("display", "none", "important");
+    
+    // 2. Mostramos de nuevo el cuadro de ingreso
+    document.getElementById('ingreso-empleado').style.setProperty("display", "flex", "important");
+    
+    // 3. Limpiamos campos
+    inputUser.value = "";
+    inputPass.value = "";
+});
+
+//PERFIL USUARIO AJUSTES
+function calcularEstantes(libro) {
+  const prestados = obtenerPrestados(libro.id);
+  return libro.cantidad - prestados;
+}
+
+function renderizarInventario() {
+  const tbody = document.getElementById("tabla-libros-cuerpo");
+  tbody.innerHTML = "";
+
+  inventario.forEach(libro => {
+    const prestados = obtenerPrestados(libro.id);
+    const estantes = calcularEstantes(libro);
+
+    const fila = document.createElement("tr");
+
+    fila.innerHTML = `
+      <td>${libro.nombre}</td>
+      <td>${libro.autor}</td>
+      <td>${libro.categoria}</td>
+      <td>${libro.cantidad}</td>
+      <td>${prestados}</td>
+      <td>${estantes}</td>
+      <td>${libro.estado}</td>
+    `;
+
+    fila.addEventListener("click", () => seleccionarLibro(libro.id));
+    tbody.appendChild(fila);
+  });
+}
+
+function moverAHistorial(libro) {
+  historial.push({
+    ...libro,
+    fecha: new Date().toLocaleDateString()
+  });
+
+  inventario = inventario.filter(l => l.id !== libro.id);
+
+  guardarInventario();
+}
+
+function renderizarHistorial() {
+    const tbody = document.getElementById("tabla-historial-cuerpo");
+    if(!tbody) return;
+    tbody.innerHTML = "";
+
+    historial.forEach(libro => {
+        const fila = document.createElement("tr");
+        fila.innerHTML = `
+            <td>${libro.nombre}</td>
+            <td>${libro.autor}</td>
+            <td>${libro.categoria}</td>
+            <td>${libro.cantidad}</td>
+            <td><span class="badge-deteriorado">${libro.estado}</span></td>
+        `;
+        tbody.appendChild(fila);
+    });
+}
+
+renderizarInventario();
+renderizarHistorial();
+
+//BOTONES MODIFICRA, AGREGAR Y ELIMINAR
+
+// ==========================================
+// 1. GESTIÓN DE MODALES (APERTURA Y CIERRE)
+// ==========================================
+const modalAgregar = document.getElementById("modal-agregar");
+const modalModificar = document.getElementById("modal-modificar");
+const modalEliminar = document.getElementById("modal-eliminar");
+
+// Botones de apertura (Clases del HTML)
+const btnAbrirAgregar = document.querySelector(".agregar-nuevo");
+const btnAbrirModificar = document.querySelector(".modificar");
+const btnAbrirEliminar = document.querySelector(".eliminar");
+
+// --- ABRIR MODALES ---
+if (btnAbrirAgregar) {
+    btnAbrirAgregar.addEventListener("click", () => {
+        modalAgregar.style.display = "flex";
+        document.getElementById("form-agregar").reset();
+        // IMPORTANTE: Aseguramos que se vean los campos del formulario
+        const grupoNuevo = document.getElementById("grupo-nuevo");
+        if(grupoNuevo) grupoNuevo.classList.remove("oculto");
+    });
+}
+
+if (btnAbrirModificar) {
+    btnAbrirModificar.addEventListener("click", () => {
+        modalModificar.style.display = "flex";
+        document.getElementById("form-modificar").reset();
+        document.getElementById("grupo-cantidad").classList.add("oculto");
+        document.getElementById("grupo-estado").classList.add("oculto");
+    });
+}
+
+// --- FUNCION PARA LLENAR EL DATALIST ---
+function actualizarSugerenciasEliminar(texto = "") {
+    const dataList = document.getElementById("sugerencias-eliminar");
+    if (!dataList) return;
+    
+    dataList.innerHTML = "";
+    const filtro = texto.toLowerCase();
+
+    const coincidencias = inventario.filter(l => l.nombre.toLowerCase().includes(filtro));
+
+    coincidencias.forEach(libro => {
+        const opcion = document.createElement("option");
+        opcion.value = libro.nombre;
+        dataList.appendChild(opcion);
+    });
+}
+
+// --- EVENTOS DE APERTURA Y ESCRITURA ---
+if (btnAbrirEliminar) {
+    btnAbrirEliminar.addEventListener("click", () => {
+        modalEliminar.style.display = "flex";
+        document.getElementById("form-eliminar").reset();
+        actualizarSugerenciasEliminar(""); // Carga inicial
+    });
+}
+
+// Escuchar cuando el usuario escribe para filtrar sugerencias
+document.getElementById("eli-nombre").addEventListener("input", (e) => {
+    actualizarSugerenciasEliminar(e.target.value);
+});
 
 
+// --- CERRAR MODALES ---
+document.getElementById("cerrar-modal-agregar").onclick = () => modalAgregar.style.display = "none";
+document.getElementById("cerrar-modificar").onclick = () => modalModificar.style.display = "none";
+document.getElementById("cerrar-eliminar").onclick = () => modalEliminar.style.display = "none";
+
+// --- LÓGICA DE CAMPOS DINÁMICOS ---
+
+// Modificar: Mostrar cantidad o estado según selección
+document.getElementById("mod-opcion").addEventListener("change", (e) => {
+    const gCant = document.getElementById("grupo-cantidad");
+    const gEst = document.getElementById("grupo-estado");
+    
+    gCant.classList.add("oculto");
+    gEst.classList.add("oculto");
+
+    if (e.target.value === "cantidad") gCant.classList.remove("oculto");
+    if (e.target.value === "estado") gEst.classList.remove("oculto");
+
+    actualizarSugerenciasEliminarSugerenciasEliminar("");
+});
+  document.getElementById("mod-nombre").addEventListener("input", (e) => {
+    actualizarSugerenciasEliminar(e.target.value);
+  });
 
 
+// 2. PROCESAMIENTO (SUBMITS)
 
 
+// Función auxiliar para actualizar todo el sistema
+function finalizarOperacion(modal) {
+    sincronizarLocalStorage(); // Guarda todo de una vez
+    renderizarInventario();
+    renderizarHistorial();
+    mostrarCatalogo();
+    modal.style.display = "none";
+    alert("Operación realizada con éxito");
+}
 
- 
+// SUBMIT AGREGAR
+document.getElementById("form-agregar").addEventListener("submit", e => {
+    e.preventDefault();
+    const nuevo = {
+        id: Date.now(),
+        nombre: document.getElementById("nuevo-nombre").value,
+        autor: document.getElementById("nuevo-autor").value,
+        categoria: document.getElementById("nuevo-categoria").value,
+        cantidad: parseInt(document.getElementById("nuevo-cantidad").value),
+        imagen: document.getElementById("nuevo-imagen").value,
+        deteriorados: 0,
+        estado: "activo"
+    };
+    inventario.push(nuevo);
+    finalizarOperacion(modalAgregar);
+});
+
+
+// 3. LÓGICA DEL SUBMIT: MODIFICAR
+document.getElementById("form-modificar").addEventListener("submit", e => {
+    e.preventDefault();
+
+    const nombreBusqueda = document.getElementById("mod-nombre").value.trim().toLowerCase();
+    const opcion = document.getElementById("mod-opcion").value;
+    
+    // 1. Buscar el libro en el array global 'inventario'
+    const libro = inventario.find(l => l.nombre.toLowerCase() === nombreBusqueda);
+
+    if (!libro) {
+        alert("❌ El libro '" + nombreBusqueda + "' no existe en el inventario.");
+        return;
+    }
+
+    // 2. Procesar según la opción elegida (Cantidad o Estado)
+    if (opcion === "cantidad") {
+        const nuevaCantidad = parseInt(document.getElementById("mod-cantidad").value);
+        if (isNaN(nuevaCantidad) || nuevaCantidad < 0) {
+            alert("⚠️ Por favor, ingrese una cantidad total válida.");
+            return;
+        }
+        libro.cantidad = nuevaCantidad;
+
+    } else if (opcion === "estado") {
+        const estadoSeleccionado = document.getElementById("mod-estado").value;
+        const cantAfectada = parseInt(document.getElementById("mod-cantidad-estado").value);
+
+        if (isNaN(cantAfectada) || cantAfectada <= 0 || cantAfectada > libro.cantidad) {
+            alert("❌ Cantidad inválida. No puede ser mayor al stock actual (" + libro.cantidad + ").");
+            return;
+        }
+
+        // Si se reporta como deteriorado, sale del inventario activo y va al historial
+        if (estadoSeleccionado === "deteriorado") {
+            libro.cantidad -= cantAfectada;
+            
+            // Añadir al historial de bajas
+            historial.push({
+                nombre: libro.nombre,
+                autor: libro.autor,
+                categoria: libro.categoria,
+                cantidad: cantAfectada,
+                estado: "Deteriorado",
+                fecha: new Date().toLocaleDateString()
+            });
+
+            // Si el stock llega a cero, eliminamos el libro del catálogo
+            if (libro.cantidad === 0) {
+                inventario = inventario.filter(l => l.nombre.toLowerCase() !== nombreBusqueda);
+            }
+        }
+    }
+
+    // 3. Guardar y Refrescar (Usa la función auxiliar que definimos antes)
+    finalizarOperacion(modalModificar);
+});
+
+
+// SUBMIT ELIMINAR (Usando el ID 'eli-nombre' de tu HTML)
+document.getElementById("form-eliminar").addEventListener("submit", e => {
+    e.preventDefault(); // Evita que la página se recargue y te saque de la sección
+
+    const nombreBuscado = document.getElementById("eli-nombre").value.trim().toLowerCase();
+    const cantAEliminar = parseInt(document.getElementById("eli-cantidad").value);
+    
+    const index = inventario.findIndex(l => l.nombre.toLowerCase() === nombreBuscado);
+    
+    if (index !== -1) {
+        const libroOriginal = inventario[index];
+        
+        // Validación de cantidad
+        if (cantAEliminar > libroOriginal.cantidad) {
+            alert(`❌ Error: Solo hay ${libroOriginal.cantidad} disponibles.`);
+            return;
+        }
+
+        // Lógica de borrado
+        if (cantAEliminar === libroOriginal.cantidad) {
+            inventario.splice(index, 1);
+        } else {
+            inventario[index].cantidad -= cantAEliminar;
+        }
+        
+        // REFRESCAR TODO (Esto evita que "parezca" que no se borró nada)
+        finalizarOperacion(modalEliminar); 
+    } else {
+        alert("Libro no encontrado. Asegúrate de seleccionar uno de la lista.");
+    }
+});
+
+// ==========================
+// INICIALIZACIÓN DEL SISTEMA
+// ==========================
+cargarInventario();
+cargarHistorial();
+renderizarInventario();
+renderizarHistorial();

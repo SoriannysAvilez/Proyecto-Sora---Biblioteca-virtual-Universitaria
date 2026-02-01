@@ -13,13 +13,16 @@ a {
 html, body {
   margin: 0;
   padding: 0;
-  height: auto; /* crece según el contenido */
-  min-height: 100vh;    
-  overflow-y: auto;
-  scroll-behavior: smooth;
+  height: auto; 
+  min-height: 100%; /* Cambia vh por % para evitar bloqueos de altura rígida */
+  overflow-x: hidden; /* Evita scroll horizontal accidental */
 }
 
-
+/* 2. Ajustar el Main y el Carousel */
+main {
+  padding-top: 130px; /* Ajusta esto según el alto de tu header real */
+  width: 100%;
+}
 /* contenedores*/
 body {
     background-color: whitesmoke;
@@ -47,17 +50,31 @@ header {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  padding: 20px 40px;
+  padding: 20px 20px;
   width: 100%;
 }
 
 .titulo {
-  justify-self: start;
+  display: flex;
+  flex-direction: column; /* Pone el span debajo del h1 */
+  align-items: flex-start; /* Alinea el h1 a la izquierda por defecto */
+  width: 100%;
 }
 
 .titulo h1 {
   font-size: 1.8rem;
   color: rgb(0, 0, 0);
+  margin: 0;
+}
+
+.titulo span {
+  font-size: medium;
+  color: rgb(19, 2, 255);
+  font-family: 'Arial', Helvetica, sans-serif;
+  font-weight: bold;
+  align-self: flex-end;    /* ¡Esta es la clave! Mueve SOLO el span a la derecha */
+  font-weight: bold;
+  margin-right: 45px;
 }
 
 .busqueda {
@@ -72,7 +89,7 @@ header {
     font-size: 14px;
     border: 1px solid #ccc;
     border-radius: 20px;
-    width: 450px;           /* Ancho fijo de la barra de búsqueda */
+    width: 400px;           /* Ancho fijo de la barra de búsqueda */
     box-sizing: border-box;  
     height: 40px;   
 }
@@ -98,28 +115,32 @@ header {
 /* Menu de navegacion*/
 .navegacion-principal {
     font-family: 'Arial', Helvetica, sans-serif;
-    text-align: center;
+    text-align:center;
+    align-items: flex-end;
     border-width: 1px;
     display: flex;
     font-weight: bold;
     justify-content:end; /* Mueve todo a la derecha */
-    font-size: medium;
-    color: rgb(1, 46, 245);
+    font-size: small;
+    color: black;
     box-shadow: none;
     z-index: 8;
-    gap: 20px;  /* Espacio entre iconos */
+    gap: 7px;  /* Espacio entre iconos */
     background-color: whitesmoke;
     margin: 0;
     padding: 4px;
     width: 100%;          /* Para que quede encima */
-    margin-right: 30px;
-
 }
 
 .navegacion-principal a:hover{
     cursor: pointer;
     transition: transform 0.5s ease-in-out;
-    color: rgb(250, 3, 188);
+    color: rgb(2, 7, 255);
+}
+
+.navegacion-principal a{
+    border-right: 1px solid #ccc;
+    padding: 0 5px;
 }
 
 /* 2- MAIN = SECCIONES*/
@@ -136,20 +157,26 @@ section {
 
 #carousel {
   width: 100%;
-  min-height: calc(100vh - 80px);
   overflow: hidden;
+  align-items: flex-start;
 }
 
-.carousel-container {
-  display: flex;
-  width: 100%;
-}
 
 .slider {
   width: 100%;
   min-width: 100%;
   box-sizing: border-box;
   padding: 20px;
+  /* IMPORTANTE: */
+  height: auto;
+  min-height: unset;
+  align-self: flex-start;
+}
+
+.carousel-container {
+  display: flex;
+  align-items: flex-start;
+  height: auto;
 }
 
 
@@ -518,13 +545,16 @@ font-weight: normal;
 
 #registrarse {
   background-color: rgb(228, 228, 233);
-  width: auto;
-  height: 100%;              /* 👈 NO 100vh */
-  padding-top: 120px;        /* espacio por header */
+  width: 100%;
+  height: auto;           /* Cambiar de 100% o 100vh a auto */
+  min-height: auto;       /* Quitar cualquier mínimo forzado */           /* 👈 NO 100vh */
+  padding-top: 20px;      /* Reducir si ya tienes padding en el main */
+  padding-bottom: 50px;   /* Espacio estético al final */      /* espacio por header */
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: flex-start;
-  font-size:xx-large;
+  font-size: x-large;
   font-family: 'Segoe UI';
   text-align: left;
 }
@@ -597,18 +627,19 @@ input, select {
 }
 
 #mis-prestamos{
-  background-color: whitesmoke(145, 196, 255);
-  width: auto;
-  margin: 0;
-  padding: 0;
-  font-size:xx-large;
-  font-family: 'Segoe UI';
-  text-align: left;
+  background-color: whitesmoke;
+  width: 100%;
+  height: auto;           /* Cambiar de 100% o 100vh a auto */
+  min-height: auto;       /* Quitar cualquier mínimo forzado */           /* 👈 NO 100vh */
+  padding-top: 20px;      /* Reducir si ya tienes padding en el main */
+  padding-bottom: 50px;   /* Espacio estético al final */      /* espacio por header */
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  padding-top: 120px;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  font-size:xx-large;
+  font-family:'Arial', Helvetica, sans-serif;
+  text-align: left;
 }
 
 
@@ -812,4 +843,343 @@ footer {
 
 .btn-salir:hover {
   background-color: blue;
+}
+
+/* Contenedor Padre */
+#perfil-empleado {
+  width: 100%;
+  padding: 20px 0 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;   /* 🔥 CENTRA TODO */
+  gap: 20px;
+  font-size: 17px;       /* 🔥 tamaño base normal */
+}
+
+
+#contendor-cabecera {
+    display: flex;
+    gap: 15px;            /* Espacio entre los botones */
+    margin-bottom: 15px;  /* Separa los botones de la tabla */
+    width: 100%;
+    justify-content: flex-end; /* Alineados a la izquierda */
+    padding-right: 65px;
+}
+
+#contendor-cabecera button {
+    padding: 10px 20px; /* Más espacio interno en el botón */
+    border-radius: 8px;  /* Bordes más suaves que combinen con el contenedor */
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    font-weight: bold;
+    font-family: 'Arial', Helvetica, sans-serif;
+    margin-top: 30px;
+}
+
+/* Colores específicos para cada acción */
+.agregar-nuevo {
+    background: #01ff2b; /* Verde éxito */
+    color: black;
+}
+
+.modificar {
+    background-color: #e5fc63; /* Amarillo/Naranja de advertencia */
+    color: black;
+}
+
+.eliminar {
+    background-color: #ff2c41; /* Rojo de peligro */
+    color: black;
+}
+
+/* Efecto al pasar el mouse */
+#contendor-cabecera button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px); /* Pequeño salto hacia arriba */
+}
+
+/* Estilo común para ambos contenedores */
+#contenedor-inicial { /* Nota: en tu HTML dice 'contenedor historial' con espacio, corrígelo a ID único */
+    width: 90%;             /* 90% del ancho del padre */
+    height: 70%;            /* 50% de la altura del padre */
+    background-color: #ece8e8; /* Fondo gris claro */
+    border-radius: 15px;    /* Bordes redondeados */
+    padding: 20px;
+    box-sizing: border-box; /* Para que el padding no afecte el tamaño total */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Sombra suave para efecto bloque */
+     display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Título y contenido a la izquierda */
+}
+
+#contenedor-historial {
+    width: 90%;
+    /* Cambia height por min-height para que el fondo gris crezca con la tabla */
+    min-height: 30%; 
+    background-color: #ece8e8;
+    border-radius: 15px;
+    padding: 20px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    /* align-items: flex-start;  <-- Cámbialo a stretch para que la tabla use todo el ancho */
+    align-items: stretch; 
+}
+
+/* Estado inicial: Todo oculto excepto el login */
+#contenedor-botones, 
+#contenedor-inicial, 
+#contenedor-historial {
+    display: none !important;
+}
+
+/* Asegurar que el cuadro de login sea lo único visible */
+#ingreso-empleado {
+    display: flex !important;
+}
+
+#ingreso-empleado h4 {
+  font-family: 'Arial', Helvetica, sans-serif;
+  font-size: large;
+  text-align: center;
+}
+
+#perfil-empleado h3{
+  color: #0004ff;
+  font-size: x-large;
+}
+
+.general table{
+    margin: 0 auto; /* Centra la tabla como bloque si no mide el 100% */
+}
+
+#tabla-libros-cuerpo {
+    overflow-y: auto;
+}
+
+/* Seleccionamos la tabla dentro de tus contenedores */
+#contenedor-inicial table, 
+#contenedor-historial table {
+    width: 100%;
+    table-layout: fixed; /* Esto obliga a que todas las columnas midan lo mismo */
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+/* Centramos el texto de los encabezados y las celdas */
+th, td {
+    text-align: center;      /* Alineación horizontal al centro */
+    vertical-align: middle;  /* Alineación vertical al centro */
+    padding: 15px 10px;      /* Espaciado interno para que no se vean pegados */
+}
+
+/* Estilo opcional para los encabezados (th) para que resalten */
+th {
+    font-weight: bold;
+    color: #070707;
+    border-bottom: 2px solid rgb(1, 46, 245); /* Línea azul debajo del encabezado */
+}
+
+/* Seleccionamos las columnas de la tabla de inventario */
+#contenedor-inicial th:nth-child(1) { 
+    width: 30%; /* Título más ancho */
+}
+
+#contenedor-inicial th:nth-child(2) { 
+    width: 25%; /* Autor un poco más ancho */
+}
+
+/* Las demás columnas se repartirán el resto del espacio automáticamente */
+#contenedor-inicial th:nth-child(n+3) {
+    width: auto; 
+}
+
+
+#ingreso-empleado {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; 
+    width: 300px;           /* Ancho fijo para que se vea como tarjeta */
+    margin: 30px auto;      /* Centrado horizontal */
+    padding: 15px;
+    border: 1px solid #ccc; /* Borde más suave */
+    border-radius: 10px;    /* Bordes más redondeados y modernos */
+    background-color: #fff; /* Fondo blanco para que resalte sobre el gris */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Sombra para darle profundidad */
+    align-items:baseline;
+    background: #d0e1f8;
+}
+/* El texto "CONTRASEÑA" */
+#ingreso-empleado label {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #333;
+    margin-bottom: -5px; /* Acerca el texto al input */
+}
+
+/* El campo donde se escribe */
+#ingreso-empleado input {
+    width: 100%;            /* Ocupa todo el ancho del cuadro */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-align: center;     /* Centra los puntitos de la clave */
+    box-sizing: border-box; /* Evita que el input se salga del cuadro */
+}
+
+/* El botón INGRESAR */
+#ingreso-empleado button {
+    width: 100%;            /* Botón ancho igual al input */
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    background: #0004ff;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+#ingreso-empleado button:hover {
+    background-color: #0003cc; /* Un azul más oscuro al pasar el mouse */
+}
+
+
+/*PERFIL EMPLEADO*/
+/* EL PADRE: Es el que manda la alineación horizontal */
+#contenedor-botones {
+    display: flex;
+    flex-direction: row;      /* Fuerza la línea horizontal */
+    justify-content: space-between; /* Separa los dos grupos a los extremos */
+    align-items: center;      /* Los nivela verticalmente al centro */
+    width: 90%;               /* Alineado con tus tablas */
+    margin: 30px auto 10px;   /* Margen superior para despegarlo del login/header */
+    padding: 0;
+}
+
+/* GRUPO DERECHO: Los botones de colores */
+#contendor-cabecera {
+    display: flex;
+    flex-direction: row;      /* Asegura que estos 3 también estén en línea */
+    gap: 15px;                /* Espacio entre Agregar, Modificar y Eliminar */
+    margin: 0;                /* Quitamos márgenes que lo bajen de nivel */
+}
+
+/* GRUPO IZQUIERDO: El botón de Salida */
+#salida-perfil {
+    display: flex;
+    align-items: center;
+}
+
+/* BOTONES: Quitamos cualquier margin-top previo */
+#contenedor-botones button {
+    margin: 0;                /* Reseteamos márgenes para que no salten de línea */
+    white-space: nowrap;      /* Evita que el texto del botón se rompa en dos líneas */
+}
+
+/* Estilo para el botón SALIR (personalizado) */
+#salida-perfil button {
+    background-color: #060af5; /* Rojo */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    cursor: pointer;
+}
+
+#salir-perfil button:hover {
+    background: #d11a2a;
+    transition: 0.5s ease;
+    transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   CORRECCIÓN DE MODALES Y ESTADOS (BIBLIOTECA EDU)
+   ========================================================================== */
+
+/* 1. Unificar el fondo del modal */
+.modal {
+    display: none;        /* Se activa con .style.display = 'flex' desde JS */
+    position: fixed;
+    inset: 0;             /* Cubre toda la pantalla */
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo oscuro semi-transparente */
+    z-index: 2000;        /* Por encima del header (que tiene 1000) */
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(2px); /* Efecto de desenfoque opcional */
+}
+
+/* 2. Clase de control de visibilidad (CRÍTICA) */
+.oculto {
+    display: none !important;
+}
+
+/* 3. Ajuste de la tarjeta del modal */
+.modal-contenido {
+    background: #ffffff;
+    padding: 25px;
+    width: 90%;
+    max-width: 450px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    position: relative;
+    font-family: 'Arial', sans-serif;
+    animation: aparecerModal 0.3s ease-out;
+}
+
+@keyframes aparecerModal {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 4. Estilos dentro del formulario del modal */
+.modal-contenido label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+    font-size: 14px;
+    color: #333;
+}
+
+.modal-contenido input, 
+.modal-contenido select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.acciones {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+/* Botones dentro del modal */
+.acciones button {
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.acciones button[type="submit"] {
+    background-color: #0004ff;
+    color: white;
+}
+
+.acciones button#cerrar-modal-agregar,
+.acciones button[type="button"] {
+    background-color: #e5e7eb;
+    color: #374151;
 }
