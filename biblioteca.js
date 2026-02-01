@@ -721,8 +721,8 @@ function aplicarFiltros() {
 
 // 2. Definición del Arreglo de Usuarios
 const usuariosTrabajadores = [
-    { usuario: "admin", clave: "1234", nombre: "Administrador" },
-    { usuario: "empleado01", clave: "unefa2026", nombre: "Juan Pérez" }
+    { usuario: "admin", clave: "1234", nombre: "Administrador de Biblioteca" },
+    { usuario: "empleado01", clave: "unefa13", nombre: "Bibliotecario: Francisco Torres" }
 ];
 
 // 3. Escuchador de Eventos (El reemplazo del onclick)
