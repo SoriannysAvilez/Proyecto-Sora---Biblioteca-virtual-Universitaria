@@ -1,29 +1,33 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es"> 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css">
-    <title>BIBLIOTECA EDU</title>
+    <meta charset="UTF-8">                                                  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <link rel="stylesheet" href="css/style.css"> 
+    <title>BIBLIOTECA EDU</title> 
 </head>
-<body>
-    
-  <header>
 
-    <div class="cabecera">
-      <div  class = "titulo">
+<body> 
+
+  <header> 
+    
+    <div class="cabecera"> 
+
+     
+      <div  class = "titulo"> 
         <h1> BIBLIOTECA EDU 📚</h1>
         <span>BIBLIOTECA NACIONAL</span>
       </div>
         
-      <form class="busqueda" id="form-busqueda">
-          <input type="text" id="input-busqueda"  placeholder="Encuentra tu libro aquí...">
-          <button type="submit" id="boton-busqueda" >BUSCAR</button>
+      
+      <form class="busqueda" id="form-busqueda"> 
+          <input type="text" id="input-busqueda"  placeholder="Encuentra tu libro aquí..."> 
+          <button type="submit" id="boton-busqueda" >BUSCAR</button>                        
       </form>
 
       
       <nav class="navegacion-principal">
-        <a href="#" data-slide="0">LIBROS</a>
+        <a href="#" data-slide="0">LIBROS</a> 
         <a href="#" data-slide="1">REGISTRARSE</a>
         <a href="#" data-slide="2">MIS PRESTAMOS</a>
         <a href="#" data-slide="3">PERFIL EMPLEADO</a>
@@ -37,14 +41,17 @@
    
     <div class="carousel-container">
 
+      
         <section id="libros" class="slider activa">
   
           <div id="catalogo-libros">   
-
+            
           </div>
 
+          
           <aside class="contenedor-resumen">
 
+            
             <div id="filtro-categorias" class="filtro-categorias">
               <h4>Filtrar por categoría</h4>
 
@@ -81,13 +88,14 @@
                   <button id="btn-solicitar-prestamo" type="button">
                       Solicitar Prestamo
                   </button>
-                </div>
+              </div>
                 
             </div>
           </aside>
         </section>
      
 
+     
         <section id="registrarse" class="slider">
 
          <form id="form-registro" novalidate>
@@ -106,12 +114,12 @@
 
              <div>
               <label for="documento" class="form-label">Ingrese su N° de Cedula de Identidad:</label>
-              <input type="text" id="documento" class="form-control" required pattern="^[0-9]+$">
+              <input type="text" id="documento" class="form-control" required pattern="^[0-9]+$"> //required pattern tipo datos requeridos
             </div>
 
             <div>
               <label for="tipo-usuario" class="form-label">Tipo de Usuario:</label>
-              <select id="tipo-usuario" class="form-select" required>
+              <select id="tipo-usuario" class="form-select" required> //eqtueta de seleccion REQUIRED= requerido
                 <option value="">-- Selecciona --</option>
                 <option value="estudiante">Estudiante</option>
                 <option value="empleado">Trabajador</option>
@@ -141,9 +149,13 @@
               <button type="submit">CONSULTAR</button>   
           </form>
 
-          <div id="detalle-prestamos"> </div>
+          <div id="detalle-prestamos"> 
+            
+          </div>
 
       </section>
+
+
 
        <section id="perfil-empleado" class="slider">
 
@@ -153,8 +165,7 @@
                 <label class="form-label">USUARIO:</label>
                 <input type="text" id="usuario" class="form-usuario" required>
                 <label class="form-label">CONTRASEÑA:</label>
-                <input type="password" id="contrasena" class="form-contrasena" required>
-              
+                <input type="password" id="contrasena" class="form-contrasena" required> 
               <button type="submit">INGRESAR</button>   
           </form>
 
@@ -172,13 +183,13 @@
           
         </div>
 
-
+        
           <div id="contenedor-inicial">
               <h3>INVENTARIO DE PUBLICACIONES</h3>
 
               <div id="libros-general" class="general"> 
-                <table>
-                  <thead>
+                <table> 
+                  <thead> 
                     <tr>
                       <th>Título</th>
                       <th>Autor</th>
@@ -195,12 +206,13 @@
                   </thead>
                   
                     <tbody id="tabla-libros-cuerpo">
-                      
+                   
                     </tbody>
                 </table>
               </div>
           </div>
 
+          
           <div id="contenedor-historial"> 
               <h3>HISTORIAL DE PUBLICACIONES</h3>
               <div id="historial-libros" class="historial">
@@ -216,12 +228,33 @@
                   </thead>
                   
                     <tbody id="tabla-historial-cuerpo">
+                     
                     </tbody>
                 </table>
                </div>
           </div>
+
+           
+          <div id="contenedor-gestion-prestamos" class="oculto-inicial">
+              <h3>GESTIÓN DE PRÉSTAMOS ACTIVOS</h3>
+              <div class="tabla-gestion">
+                  <table>
+                      <thead>
+                          <tr>
+                              <th>Usuario (Carnet)</th>
+                              <th>Libros</th>
+                              <th>Fecha Devolución</th>
+                              <th>Estado</th>
+                              <th>Acción</th>
+                          </tr>
+                      </thead>
+                      <tbody id="tabla-gestion-prestamos-cuerpo">
+                        
+                          </tbody>
+                  </table>
+              </div>
+          </div>
       </section>
-       
 
     </div>
 </main>
@@ -240,7 +273,7 @@
        <input type="text" id="carnet-modal" required pattern="^(EST|EMP)-[0-9]+$">
 
         <button type="submit" class="btn-confirmar">
-          Confirmar préstamo
+          
         </button>
       </form>
 
@@ -340,6 +373,7 @@
     </div>
   </div>
 
+   
   <footer>
     <div class="derechos">
       <p>© 2026 BIBLIOTECA EDU - Todos los derechos reservados</p>

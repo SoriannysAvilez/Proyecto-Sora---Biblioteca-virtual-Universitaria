@@ -1,12 +1,14 @@
 /////////////////////////////////NAVEGACION /////////////////////////////////////////////
 
 //CONFIGURACION DE LOS SLIDER DE LAS SECCIONES 
-const enlaces = document.querySelectorAll(".navegacion-principal a");
-const contenedor = document.querySelector(".carousel-container");
+
+const enlaces = document.querySelectorAll(".navegacion-principal a"); //almacenar referencias de los elemnteos  contenedor barra nav
+
+const contenedor = document.querySelector(".carousel-container"); //contenedor ompleto del main
 
 enlaces.forEach(enlace => {
   enlace.addEventListener("click", e => {
-    e.preventDefault();
+    e.preventDefault(); //previene que el navegador actue forma prederminada
 
     const indice = Number(enlace.dataset.slide);
 
@@ -50,29 +52,28 @@ const libros = [
     { id: 16, nombre: "Introd. a la Ing. en Sistemas Computacionales y al DOO", autor:"Bruno López Takeyas", categoria: "Libro", imagen: "media/introduccion.jfif", cantidad:4, deteriorados: 0, estado: "activo"}     
 ];
 
+// 1. CARGA INICIAL
 let resumenPrestamo = JSON.parse(localStorage.getItem("resumenPrestamo")) || [];
 
-let librosPrestados = JSON.parse(localStorage.getItem("librosPrestados")) || [];
-
-
-//1. CARGA INICIAL INVENTARIO DE ELIBROS - HISTORIAL
-
-// Cargamos o inicializamos con el array por defecto (libros)
+// Cargamos inventario o usamos la base de datos por defecto
 let inventario = JSON.parse(localStorage.getItem("inventarioLibros")) || [...libros];
+// Cambiamos el nombre a "historialBajas" para que coincida con tu función de sincronización
+// CORRECCIÓN: Verifica que el nombre coincida con el que usas para guardar
 let historial = JSON.parse(localStorage.getItem("historialLibros")) || [];
 
-// Si es la primera vez (no hay nada en localStorage), guardamos la base inicial
+
+// Guardado inicial si la DB está vacía
 if (!localStorage.getItem("inventarioLibros")) {
     localStorage.setItem("inventarioLibros", JSON.stringify(inventario));
 }
 
-// 2. FUNCIÓN ÚNICA DE PERSISTENCIA
-// Usa esta función siempre al final de agregar, modificar o eliminar
+// 2. FUNCIÓN ÚNICA DE PERSISTENCIA (EL MOTOR DEL PROYECTO)
 function sincronizarLocalStorage() {
     localStorage.setItem("inventarioLibros", JSON.stringify(inventario));
-    localStorage.setItem("historialLibros", JSON.stringify(historial));
+    localStorage.setItem("historialLibros", JSON.stringify(historial)); // 
+    localStorage.setItem("librosPrestados", JSON.stringify(librosPrestados));
+    localStorage.setItem("historialPrestamos", JSON.stringify(historialPrestamos));
 }
-
 
 /////////////////////////FUNCIONES AUXILIARES//////////////////////////
 
@@ -94,6 +95,7 @@ function sincronizarLocalStorage() {
       inputCarrera.value = "";
     }
   });
+
 
   //2- GENERAR CARNET (dinamicamente)
   function generarCarnet(tipo) {
@@ -243,132 +245,98 @@ function totalLibrosPrestamo() {
     return total;
 }
 
-////5////
-function obtenerPrestados(id) {
-  const registro = librosPrestados.find(l => l.id === id);
-  return registro ? registro.prestados : 0;
-}
 
-
-////6////
+////4////
 function solicitarPrestamo() {
-
   if (resumenPrestamo.length === 0) {
-      alert("No hay libros seleccionados");
-      return;
+    alert("No hay libros seleccionados");
+    return;
   }
 
   const carnet = document.getElementById("carnet-modal").value.trim().toUpperCase();
-
   const formatoCarnet = /^(EST|EMP)-\d{5}$/;
 
-    if (!formatoCarnet.test(carnet)) {
-      alert("❌ Formato inválido. Ejemplo válido: EST-12345");
-      return;
-    }
-
+  if (!formatoCarnet.test(carnet)) {
+    alert("❌ Formato inválido. Ejemplo válido: EST-12345");
+    return;
+  }
 
   const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-
   const usuarioC = usuarios.find(u => u.carnet === carnet);
 
-    if (!usuarioC) {
-      alert("⚠️ Carnet no registrado. Debe registrarse primero.");
-      return;
-    }
+  if (!usuarioC) {
+    alert("⚠️ Carnet no registrado. Debe registrarse primero.");
+    return;
+  }
 
-  const maxLibros = usuarioC.tipo === "estudiante" ? 5 : 10;     //5 libros estudiantes - 10 libros empleados
-  const diasPrestamo = usuarioC.tipo === "estudiante" ? 7 : 10;  //7 dias prestamos estudiantes - 10 dias prestamo empleado
+  const maxLibros = usuarioC.tipo === "estudiante" ? 5 : 10; 
+  const diasPrestamo = usuarioC.tipo === "estudiante" ? 7 : 10; 
 
   const totalLibros = totalLibrosPrestamo();
 
-    if (totalLibros > maxLibros) {
-      alert(
-        `❌ Ha excedido la cantidad permitida\n\n` +
-        `Tipo: ${usuarioC.tipo}\n` +
-        `Máximo: ${maxLibros}\n` +
-        `Solicitados: ${totalLibros}`
-      );
-      return;
-    }
+  if (totalLibros > maxLibros) {
+    alert(`❌ Excedió el máximo de ${maxLibros} libros.`);
+    return;
+  }
 
+  // Validación de disponibilidad física
   for (const item of resumenPrestamo) {
-    const libro = inventario.find(l => l.id === item.id);   //Se busca el libro seleccionado
-    const yaPrestados = obtenerPrestados(item.id);          //se extrae cantidad de ejemplares ya prestados
-    const disponibles = libro.cantidad - yaPrestados;       //se extrae cantidad de ejemplares disponibles
-
-    if (item.cantidad > disponibles) {
-      alert(
-        `❌ No hay suficientes ejemplares\n\n` +
-        `Libro: ${libro.nombre}\n` +
-        `Disponibles: ${disponibles}`
-      );
+    const libro = inventario.find(l => l.id === item.id);
+    if (!libro) continue;
+    if (item.cantidad > libro.cantidad) {
+      alert(`❌ No hay suficientes ejemplares de: ${libro.nombre}`);
       return;
     }
   }
 
-    // 📚 Registrar libros prestados (almacenar datos de libro prestado, id, cantidad)
-    resumenPrestamo.forEach(item => {
-    // 1. Actualizar tu lista auxiliar de librosPrestados (lo que ya tenías)
-    const registro = librosPrestados.find(l => l.id === item.id);
-    if (registro) {
-        registro.prestados += item.cantidad;
-    } else {
-        librosPrestados.push({
-            id: item.id,
-            prestados: item.cantidad
-        });
+  // 🔄 Actualizar Inventario (Suma/Resta de contadores)
+  resumenPrestamo.forEach(item => {
+    const libro = inventario.find(l => l.id === item.id);
+    if (libro) {
+      libro.cantidad -= item.cantidad; // Baja de estante
+      libro.prestados = (libro.prestados || 0) + item.cantidad; // Sube a prestados
     }
+  });
 
-    const libroEnInventario = inventario.find(l => l.id === item.id);
-    if (libroEnInventario) {
-        // Asegúrate de que la propiedad exista, si no, inicialízala en 0
-        libroEnInventario.prestados = (libroEnInventario.prestados || 0) + item.cantidad;
-    }
-    });
+  // Guardar Inventario actualizado
+  localStorage.setItem("inventarioLibros", JSON.stringify(inventario));
 
-    guardarInventario();
-
-    // Guardamos el inventario completo (que ahora ya tiene los nuevos prestados)
-    localStorage.setItem("inventarioLibros", JSON.stringify(inventario));
-
-    //auxiliar
-    localStorage.setItem("librosPrestados", JSON.stringify(librosPrestados));  //se almacenan en el LS
-
-
-  //Almacenar fecha de prestamo, fecha de devolucion, dias prestados (historial de prestamos)
+  // 📅 Gestionar Fechas
   const fechaPrestamo = new Date();
   const fechaDevolucion = new Date();
   fechaDevolucion.setDate(fechaPrestamo.getDate() + diasPrestamo);
 
-  const historial = JSON.parse(localStorage.getItem("historialPrestamos")) || [];
+  // 📝 Guardar en Historial de Préstamos Activos
+  const historialPrestamos = JSON.parse(localStorage.getItem("historialPrestamos")) || [];
+  
+  historialPrestamos.push({
+    carnet: usuarioC.carnet,
+    nombreCompleto: `${usuarioC.nombre} ${usuarioC.apellido}`,
+    fechaPrestamo: fechaPrestamo.toISOString(),
+    fechaDevolucion: fechaDevolucion.toISOString(),
+    libros: [...resumenPrestamo] // Usamos una copia para evitar problemas de referencia
+  });
 
-    historial.push({
-      carnet: usuarioC.carnet,
-      nombreCompleto: `${usuarioC.nombre} ${usuarioC.apellido}`,
-      fechaPrestamo: fechaPrestamo.toISOString(),
-      fechaDevolucion: fechaDevolucion.toISOString(),
-      libros: resumenPrestamo
-    });
+  localStorage.setItem("historialPrestamos", JSON.stringify(historialPrestamos));
 
-    localStorage.setItem("historialPrestamos", JSON.stringify(historial));
+  alert(`✅ Préstamo registrado correctamente para ${usuarioC.nombre}.`);
 
-  alert(
-    `✅ Préstamo registrado correctamente\n\n` +
-    `Usuario: ${usuarioC.nombre} ${usuarioC.apellido}\n` +
-    `Carnet: ${usuarioC.carnet}\n` +
-    `Debe devolver los libros en ${diasPrestamo} días.`
-  );
-
+  // --- REFRESCAR SISTEMA ---
   resumenPrestamo = [];
   localStorage.removeItem("resumenPrestamo");
-  actualizar();
-  renderizarInventario(); // Refresca la tabla de empleados
-  mostrarCatalogo();
+  
+  // 1. Cerramos el modal (si tienes una función para ello)
+  if(typeof modalPrestamo !== 'undefined') modalPrestamo.style.display = "none";
+
+  // 2. Ejecutamos todos los renders para que la info aparezca de inmediato
+  renderizarInventario();        // Actualiza la tabla de publicaciones
+  renderizarGestionPrestamos();  // Actualiza la tabla de préstamos activos (Crucial)
+  mostrarCatalogo();             // Actualiza las tarjetas del usuario
+  actualizar();                  // Tu función general de actualización
 }
 
 
-////-3----FUNCION PARA ACTUALIZAR DATOS DEL CONTENEDOR DEL RESUMEN/////
+////-5----FUNCION PARA ACTUALIZAR DATOS DEL CONTENEDOR DEL RESUMEN/////
 
 function actualizarResumen() {
     
@@ -797,6 +765,7 @@ formEmpleado.addEventListener("submit", (e) => {
 
       if (usuarioValido) {
         alert(`¡Acceso concedido! Bienvenido ${usuarioValido.nombre}`);
+        
 
         // 🔹 MOVER CARRUSEL A PERFIL EMPLEADO
         contenedor.style.transform = "translateX(-300%)";
@@ -817,6 +786,10 @@ formEmpleado.addEventListener("submit", (e) => {
         document.getElementById("contenedor-historial")
           .style.setProperty("display", "flex", "important");
 
+        document.getElementById("contenedor-gestion-prestamos")
+          .classList.remove("oculto-inicial");
+
+
       } else {
         alert("Credenciales incorrectas");
         inputPass.value = "";
@@ -824,17 +797,18 @@ formEmpleado.addEventListener("submit", (e) => {
 });
 
 // 3. Función para cambiar la vista (Entrar)
-function mostrarPanelGestion() {
-    // Ocultamos el cuadro de login
-    document.getElementById('ingreso-empleado').style.display = 'none';
-    
-    // Mostramos la cabecera (botones de gestión y salir)
-    document.getElementById('contenedor-botones').style.display = 'flex';
-    
-    // Mostramos las tablas de inventario e historial
-    document.getElementById('contenedor-inicial').style.display = 'flex';
-    document.getElementById('contenedor-historial').style.display = 'flex';
-}
+  function mostrarPanelGestion() {
+    document.getElementById("ingreso-empleado").style.display = "none";
+    document.getElementById("contenedor-botones").style.display = "flex";
+    document.getElementById("contenedor-inicial").style.display = "flex";
+    document.getElementById("contenedor-historial").style.display = "flex";
+
+    // ✅ ESTA LÍNEA ES CLAVE
+    document.getElementById("contenedor-gestion-prestamos").classList.remove("oculto-inicial");
+
+    renderizarGestionPrestamos();
+  }
+
 
 // 5. Función para Cerrar Sesión (Salir)
 const btnSalir = document.querySelector('.salir');
@@ -847,6 +821,10 @@ btnSalir.addEventListener('click', () => {
     
     // 2. Mostramos de nuevo el cuadro de ingreso
     document.getElementById('ingreso-empleado').style.setProperty("display", "flex", "important");
+
+    // 3. Ocultar la sección de gestión
+    document.getElementById("contenedor-gestion-prestamos").classList.add("oculto-inicial");
+
     
     // 3. Limpiamos campos
     inputUser.value = "";
@@ -854,39 +832,37 @@ btnSalir.addEventListener('click', () => {
 });
 
 
-//6-Funcion auxiliar calcular cantidad de libros disponibles en stand
-function calcularEstantes(libro) {
-  const prestados = obtenerPrestados(libro.id);
-  return libro.cantidad - prestados;
-}
-
-
-//7- DIBUJAR TABLA DE INVENTARIO DE PUBLICACIONES 
+//6- DIBUJAR TABLA DE INVENTARIO DE PUBLICACIONES 
 
 function renderizarInventario() {
   const tbody = document.getElementById("tabla-libros-cuerpo");
+  if (!tbody) return;
   tbody.innerHTML = "";
 
   inventario.forEach(libro => {
-    const prestados = obtenerPrestados(libro.id);
-    const estantes = calcularEstantes(libro);
+    // Leemos las propiedades que actualizamos en solicitarPrestamo
+    const prestados = libro.prestados || 0;
+    const estantes = libro.cantidad || 0;
+    const total = estantes + prestados;
 
     const fila = document.createElement("tr");
-
     fila.innerHTML = `
       <td>${libro.nombre}</td>
       <td>${libro.autor}</td>
       <td>${libro.categoria}</td>
-      <td>${libro.cantidad}</td>
+      <td>${total}</td>
       <td>${prestados}</td>
       <td>${estantes}</td>
       <td>${libro.estado}</td>
     `;
 
-    fila.addEventListener("click", () => seleccionarLibro(libro.id));
+    fila.addEventListener("click", () => {
+        if (typeof seleccionarLibro === "function") seleccionarLibro(libro.id);
+    });
     tbody.appendChild(fila);
   });
 }
+
 
 //7--Funcion para mover libros deteriorados a historial
 function moverAHistorial(libro) {
@@ -903,12 +879,15 @@ function moverAHistorial(libro) {
 
 //8-Funcion para dibujar tabla de historial
 function renderizarHistorial() {
-    
-  const tbody = document.getElementById("tabla-historial-cuerpo");
-    
-    if(!tbody) return;
-    
+    const tbody = document.getElementById("tabla-historial-cuerpo");
+    if (!tbody) return;
+
     tbody.innerHTML = "";
+
+    if (historial.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No hay libros deteriorados registrados</td></tr>`;
+        return;
+    }
 
     historial.forEach(libro => {
         const fila = document.createElement("tr");
@@ -917,7 +896,9 @@ function renderizarHistorial() {
             <td>${libro.autor}</td>
             <td>${libro.categoria}</td>
             <td>${libro.cantidad}</td>
-            <td><span class="badge-deteriorado">${libro.estado}</span></td>
+            <td><span class="badge-deteriorado" style="background-color: #ff4d4d; color: white; padding: 4px 8px; border-radius: 4px;">
+                ${libro.estado || "Deteriorado"}
+            </span></td>
         `;
         tbody.appendChild(fila);
     });
@@ -925,6 +906,7 @@ function renderizarHistorial() {
 
 renderizarInventario();
 renderizarHistorial();
+renderizarGestionPrestamos();
 
 //CONFIGURACION DE MODALES PERFIL EMPLEADO = 🟡BOTONES MODIFICAR, ➕ AGREGAR Y  ❌ELIMINAR
 
@@ -1004,18 +986,19 @@ document.getElementById("cerrar-eliminar").onclick = () => modalEliminar.style.d
 // --- LÓGICA DE CAMPOS DINÁMICOS ---
 
 // Modificar: Mostrar cantidad o estado según selección
-document.getElementById("mod-opcion").addEventListener("change", (e) => {
-    const gCant = document.getElementById("grupo-cantidad");
-    const gEst = document.getElementById("grupo-estado");
-    
-    gCant.classList.add("oculto");
-    gEst.classList.add("oculto");
+  document.getElementById("mod-opcion").addEventListener("change", (e) => {
+      const gCant = document.getElementById("grupo-cantidad");
+      const gEst = document.getElementById("grupo-estado");
+      
+      gCant.classList.add("oculto");
+      gEst.classList.add("oculto");
 
-    if (e.target.value === "cantidad") gCant.classList.remove("oculto");
-    if (e.target.value === "estado") gEst.classList.remove("oculto");
+      if (e.target.value === "cantidad") gCant.classList.remove("oculto");
+      if (e.target.value === "estado") gEst.classList.remove("oculto");
 
-    actualizarSugerenciasEliminarSugerenciasEliminar("");
-});
+      // Corregido el nombre de la función:
+      actualizarSugerenciasEliminar(""); 
+  });
 
   document.getElementById("mod-nombre").addEventListener("input", (e) => {
     actualizarSugerenciasEliminar(e.target.value);
@@ -1024,136 +1007,345 @@ document.getElementById("mod-opcion").addEventListener("change", (e) => {
 
 // Función auxiliar para actualizar todo el sistema
 function finalizarOperacion(modal) {
-    sincronizarLocalStorage(); // Guarda todo de una vez
-    renderizarInventario();
-    renderizarHistorial();
-    mostrarCatalogo();
-    modal.style.display = "none";
-    alert("Operación realizada con éxito");
+    // Sincronización crucial con LocalStorage
+    localStorage.setItem("inventarioLibros", JSON.stringify(inventario));
+    localStorage.setItem("historialLibros", JSON.stringify(historial));
+    
+    // Refresco de todas las interfaces
+    renderizarInventario();        // Actualiza la tabla con los nuevos libros
+    renderizarGestionPrestamos();  // Asegura que la tabla de gestión esté al día
+    mostrarCatalogo();             // Actualiza las tarjetas para el usuario
+    if (typeof renderizarHistorial === "function") renderizarHistorial();
+    
+    // Cerrar el modal
+    if (modal) modal.style.display = "none";
+    
+    alert("✅ Operación realizada con éxito");
 }
-
 
 ///PROCESAMIENTO (SUBMITS)
 
-// SUBMIT AGREGAR
-document.getElementById("form-agregar").addEventListener("submit", e => {
+// --- RE-VINCULACIÓN DE FORMULARIOS DE GESTIÓN ---
+
+// 1. SUBMIT AGREGAR
+
+const formAgregar = document.getElementById("form-agregar");
+
+// Limpiamos cualquier evento previo para evitar duplicados
+formAgregar.onsubmit = null; 
+
+formAgregar.onsubmit = (e) => {
     e.preventDefault();
     
-    const nuevo = {
-        id: Date.now(),
-        nombre: document.getElementById("nuevo-nombre").value,
-        autor: document.getElementById("nuevo-autor").value,
-        categoria: document.getElementById("nuevo-categoria").value,
-        cantidad: parseInt(document.getElementById("nuevo-cantidad").value),
-        imagen: document.getElementById("nuevo-imagen").value,
-        deteriorados: 0,
+    // Capturamos los valores
+    const nombre = document.getElementById("nuevo-nombre").value.trim();
+    const autor = document.getElementById("nuevo-autor").value.trim();
+    const categoria = document.getElementById("nuevo-categoria").value;
+    const cantidad = parseInt(document.getElementById("nuevo-cantidad").value);
+    const imagen = document.getElementById("nuevo-imagen").value;
+
+    // Validación básica para evitar entradas vacías
+    if (!nombre || isNaN(cantidad)) {
+        alert("Por favor, complete los campos obligatorios.");
+        return;
+    }
+
+    const nuevoLibro = {
+        id: Date.now(), // ID único basado en tiempo
+        nombre: nombre,
+        autor: autor,
+        categoria: categoria,
+        cantidad: cantidad, // Esto va a la columna "En Estantes"
+        prestados: 0,       // Inicializamos siempre en 0
+        imagen: imagen,
         estado: "activo"
     };
-    inventario.push(nuevo);
+    
+    // Agregamos al array global
+    inventario.push(nuevoLibro);
+    
+    // Limpiamos el formulario para el próximo uso
+    formAgregar.reset();
+    
+    // Ejecutamos la finalización (Guarda y Renderiza todo)
     finalizarOperacion(modalAgregar);
-});
+};
 
-
-//SUBMIT: MODIFICAR
-document.getElementById("form-modificar").addEventListener("submit", e => {
+// 2. SUBMIT MODIFICAR
+document.getElementById("form-modificar").onsubmit = (e) => {
     e.preventDefault();
-
     const nombreBusqueda = document.getElementById("mod-nombre").value.trim().toLowerCase();
-
     const opcion = document.getElementById("mod-opcion").value;
     
-    // 1. Buscar el libro en el array global 'inventario'
     const libro = inventario.find(l => l.nombre.toLowerCase() === nombreBusqueda);
 
-        if (!libro) {
-            alert("❌ El libro '" + nombreBusqueda + "' no existe en el inventario.");
-            return;
-        }
+    if (!libro) {
+        alert("❌ El libro no existe.");
+        return;
+    }
 
-    // 2. Procesar según la opción elegida (Cantidad o Estado)
-      if (opcion === "cantidad") {
-          const nuevaCantidad = parseInt(document.getElementById("mod-cantidad").value);
-          if (isNaN(nuevaCantidad) || nuevaCantidad < 0) {
-              alert("⚠️ Por favor, ingrese una cantidad total válida.");
-              return;
-          }
-          libro.cantidad = nuevaCantidad;
-
-      } else if (opcion === "estado") {
-          const estadoSeleccionado = document.getElementById("mod-estado").value;
-          const cantAfectada = parseInt(document.getElementById("mod-cantidad-estado").value);
-
-          if (isNaN(cantAfectada) || cantAfectada <= 0 || cantAfectada > libro.cantidad) {
-              alert("❌ Cantidad inválida. No puede ser mayor al stock actual (" + libro.cantidad + ").");
-              return;
-          }
-
-      // Si se reporta como deteriorado, sale del inventario activo y va al historial
-        if (estadoSeleccionado === "deteriorado") {
+    if (opcion === "cantidad") {
+        libro.cantidad = parseInt(document.getElementById("mod-cantidad").value);
+    } else if (opcion === "estado") {
+        const cantAfectada = parseInt(document.getElementById("mod-cantidad-estado").value);
+        if (cantAfectada <= libro.cantidad) {
             libro.cantidad -= cantAfectada;
-            
-            // Añadir al historial de bajas
+            // Registro en historial deteriorados
             historial.push({
                 nombre: libro.nombre,
                 autor: libro.autor,
-                categoria: libro.categoria,
                 cantidad: cantAfectada,
                 estado: "Deteriorado",
                 fecha: new Date().toLocaleDateString()
             });
-
-            // Si el stock llega a cero, eliminamos el libro del catálogo
-            if (libro.cantidad === 0) {
-                inventario = inventario.filter(l => l.nombre.toLowerCase() !== nombreBusqueda);
-            }
         }
     }
-
-    // Guardar y Refrescar (Usa la función auxiliar que definimos antes)
     finalizarOperacion(modalModificar);
-});
+};
 
-
-// SUBMIT ELIMINAR: (Usando el ID 'eli-nombre' de tu HTML)
-
-document.getElementById("form-eliminar").addEventListener("submit", e => {
-    e.preventDefault(); // Evita que la página se recargue y te saque de la sección
-
-    const nombreBuscado = document.getElementById("eli-nombre").value.trim().toLowerCase();
-
-    const cantAEliminar = parseInt(document.getElementById("eli-cantidad").value);
-    
-    const index = inventario.findIndex(l => l.nombre.toLowerCase() === nombreBuscado);
-    
-    if (index !== -1) {
-
-        const libroOriginal = inventario[index];
-        
-        // Validación de cantidad
-        if (cantAEliminar > libroOriginal.cantidad) {
-            alert(`❌ Error: Solo hay ${libroOriginal.cantidad} disponibles.`);
-            return;
-        }
-
-        // Lógica de borrado
-        if (cantAEliminar === libroOriginal.cantidad) {
-            inventario.splice(index, 1);
-        } else {
-            inventario[index].cantidad -= cantAEliminar;
-        }
-        
-        // REFRESCAR TODO (Esto evita que "parezca" que no se borró nada)
-        finalizarOperacion(modalEliminar); 
-        
+// 3. SUBMIT ELIMINAR
+document.getElementById("form-eliminar").onsubmit = (e) => {
+  e.preventDefault();
+  const nombreBuscado = document.getElementById("eli-nombre").value.trim().toLowerCase();
+  const cantAEliminar = parseInt(document.getElementById("eli-cantidad").value);
+  
+  const index = inventario.findIndex(l => l.nombre.toLowerCase() === nombreBuscado);
+  
+  if (index !== -1) {
+      if (cantAEliminar >= inventario[index].cantidad) {
+          inventario.splice(index, 1);
       } else {
-          alert("Libro no encontrado. Asegúrate de seleccionar uno de la lista.");
+          inventario[index].cantidad -= cantAEliminar;
       }
+      finalizarOperacion(modalEliminar);
+  } else {
+      alert("Libro no encontrado.");
+  }
+};
+
+
+///////CONTENEDOR GESTION PRESTAMOS
+
+//DIBUJAR TABLA DE PRESTAMOS ACTIVOS CON DATOS DEL USUARIO
+function renderizarGestionPrestamos() {
+    const tbody = document.getElementById("tabla-gestion-prestamos-cuerpo");
+    if (!tbody) return;
+    tbody.innerHTML = "";
+
+    const prestamos = JSON.parse(localStorage.getItem("historialPrestamos")) || [];
+
+    if (prestamos.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5">No hay préstamos activos</td></tr>`;
+        return;
+    }
+
+    prestamos.forEach((prestamo, index) => { // Agregamos el index aquí
+    if (!prestamo.libros || !Array.isArray(prestamo.libros)) return;
+
+    const fila = document.createElement("tr");
+    const listaLibros = prestamo.libros
+        .map(l => `${l.nombre} (${l.cantidad})`)
+        .join(", ");
+
+    const fechaLimpia = prestamo.fechaDevolucion.split('T')[0];
+
+    fila.innerHTML = `
+        <td>${prestamo.nombreCompleto}<br><small>${prestamo.carnet}</small></td>
+        <td>${listaLibros}</td>
+        <td>${fechaLimpia}</td>
+        <td><span class="estado pendiente">Pendiente</span></td>
+        <td>
+            <button class="btn-recibir" data-index="${index}">Recibir Libros</button>
+        </td>
+    `;
+    tbody.appendChild(fila);
 });
+}
+
+
+
+// Funciones para cargar datos al abrir la página
+function cargarInventario() {
+    const datos = localStorage.getItem("inventarioLibros");
+    if (datos) {
+        inventario = JSON.parse(datos);
+    }
+}
+
+function cargarHistorial() {
+    const datos = localStorage.getItem("historialLibros");
+    if (datos) {
+        historial = JSON.parse(datos);
+    }
+}
+
+   
+function confirmarRecepcionPrestamo(carnet) {
+    if (!confirm("¿Confirmar recepción de los libros?")) return;
+
+    let prestamos = JSON.parse(localStorage.getItem("historialPrestamos")) || [];
+    let inventarioActual = JSON.parse(localStorage.getItem("inventarioLibros")) || [];
+
+    // 1. Encontrar el préstamo por carnet
+    const prestamoIndex = prestamos.findIndex(p => p.carnet === carnet);
+    
+    if (prestamoIndex !== -1) {
+        const prestamo = prestamos[prestamoIndex];
+
+        // 2. Devolver stock al inventario y actualizar contadores
+        prestamo.libros.forEach(itemPrestado => {
+            const libroInv = inventarioActual.find(l => l.id === itemPrestado.id);
+            
+            if (libroInv) {
+                // Aumentamos lo que hay en estante (cantidad disponible)
+                libroInv.cantidad += itemPrestado.cantidad;
+                
+                // IMPORTANTE: Restamos de la cuenta de prestados
+                if (libroInv.prestados) {
+                    libroInv.prestados -= itemPrestado.cantidad;
+                    // Evitar números negativos por error de datos previos
+                    if (libroInv.prestados < 0) libroInv.prestados = 0;
+                }
+            }
+        });
+
+        // 3. Eliminar el préstamo de la lista de pendientes/activos
+        prestamos.splice(prestamoIndex, 1);
+
+        // 4. Guardar cambios en LocalStorage
+        localStorage.setItem("historialPrestamos", JSON.stringify(prestamos));
+        localStorage.setItem("inventarioLibros", JSON.stringify(inventarioActual));
+
+        // 5. Actualizar la variable global 'inventario' para que los renders la vean
+        inventario = inventarioActual;
+
+        alert("✅ Libros recibidos: Inventario actualizado correctamente.");
+
+        // 6. Refrescar todas las vistas afectadas
+        renderizarInventario();         // Actualiza la tabla del empleado (Estantes/Prestados)
+        renderizarGestionPrestamos();  // Quita la fila de la tabla de gestión
+        mostrarCatalogo();             // Actualiza disponibilidad en la vista de usuario
+    } else {
+        alert("❌ No se encontró el préstamo para este carnet.");
+    }
+}
+
+  //EVENTO
+    // --- EVENTO PARA RECIBIR LIBROS ---
+    document.getElementById("tabla-gestion-prestamos-cuerpo")
+    .addEventListener("click", function (e) {
+        if (!e.target.classList.contains("btn-recibir")) return;
+
+        // Obtenemos el índice del atributo data-index del botón
+        const index = e.target.getAttribute("data-index");
+
+        if (index !== null) {
+            confirmarRecepcionPrestamo(parseInt(index));
+        }
+    });
+
+
+function confirmarRecepcionPrestamo(index) {
+    if (!confirm("¿Confirmar recepción de este préstamo específico?")) return;
+
+    let prestamosActivos = JSON.parse(localStorage.getItem("historialPrestamos")) || [];
+    let inventarioActual = JSON.parse(localStorage.getItem("inventarioLibros")) || [];
+
+    // 1. Obtenemos el préstamo exacto usando el índice
+    const prestamo = prestamosActivos[index];
+    
+    if (prestamo) {
+        // 2. Devolvemos las cantidades al inventario
+        prestamo.libros.forEach(itemPrestado => {
+            const libroInv = inventarioActual.find(l => l.id === itemPrestado.id);
+            if (libroInv) {
+                libroInv.cantidad += itemPrestado.cantidad;
+                libroInv.prestados = Math.max(0, (libroInv.prestados || 0) - itemPrestado.cantidad);
+            }
+        });
+
+        // 3. ELIMINACIÓN PRECISA: Borramos solo ese elemento del array
+        prestamosActivos.splice(index, 1);
+
+        // 4. Guardamos cambios
+        localStorage.setItem("historialPrestamos", JSON.stringify(prestamosActivos));
+        localStorage.setItem("inventarioLibros", JSON.stringify(inventarioActual));
+
+        // Actualizar variable global y UI
+        inventario = inventarioActual;
+        alert("✅ Préstamo recibido e inventario actualizado.");
+
+        renderizarGestionPrestamos();
+        renderizarInventario();
+    }
+}
+
+function limpiarDuplicados() {
+    let inventarioActual = JSON.parse(localStorage.getItem("inventarioLibros")) || [];
+    
+    // Filtramos para quedarnos solo con nombres únicos
+    const inventarioLimpio = inventarioActual.filter((libro, index, self) =>
+        index === self.findIndex((l) => l.nombre === libro.nombre)
+    );
+
+    // Guardamos la versión limpia
+    localStorage.setItem("inventarioLibros", JSON.stringify(inventarioLimpio));
+    
+    // Actualizamos la variable global y la vista
+    inventario = inventarioLimpio;
+    renderizarInventario();
+    mostrarCatalogo();
+    
+    console.log("✅ Inventario limpiado: se eliminaron los duplicados.");
+}
+
+// Llama a la función
+limpiarDuplicados();
+
+function limpiarHistorialDuplicados() {
+    // 1. Cargamos el historial desde LocalStorage
+    let historialActual = JSON.parse(localStorage.getItem("historialLibros")) || [];
+    
+    if (historialActual.length === 0) return;
+
+    // 2. Filtramos duplicados basándonos en el nombre del libro
+    // (Usamos nombre y autor por si hay libros con nombres iguales pero distintos autores)
+    const historialLimpio = historialActual.filter((libro, index, self) =>
+        index === self.findIndex((l) => (
+            l.nombre === libro.nombre && l.autor === libro.autor
+        ))
+    );
+
+    // 3. Guardamos los datos limpios en LocalStorage
+    localStorage.setItem("historialLibros", JSON.stringify(historialLimpio));
+    
+    // 4. Actualizamos la variable global y la tabla visual
+    historial = historialLimpio;
+    
+    if (typeof renderizarHistorial === "function") {
+        renderizarHistorial();
+    }
+    
+    console.log("✅ Historial de deteriorados limpiado.");
+}
 
 // ==========================
 // INICIALIZACIÓN DEL SISTEMA
 // ==========================
-cargarInventario();
-cargarHistorial();
+
+// --- AL FINAL DE TU ARCHIVO ---
+
+// 1. Sincronizamos las variables globales con la persistencia
+inventario = JSON.parse(localStorage.getItem("inventarioLibros")) || [...libros];
+historial = JSON.parse(localStorage.getItem("historialLibros")) || [];
+
+//2. Ejecutar limpiezas
+limpiarDuplicados();          // Limpia el inventario principal
+limpiarHistorialDuplicados(); // Limpia el historial de deteriorados
+
+// 3. Ejecutamos los renders en orden
+mostrarCatalogo();
 renderizarInventario();
-renderizarHistorial();
+renderizarHistorial(); 
+renderizarGestionPrestamos();
+

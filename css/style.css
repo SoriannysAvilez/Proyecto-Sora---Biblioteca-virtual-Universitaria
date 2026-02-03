@@ -1183,3 +1183,103 @@ th {
     background-color: #e5e7eb;
     color: #374151;
 }
+
+/* Estilos para la Gestión de Préstamos */
+.badge {
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.85em;
+    font-weight: bold;
+}
+
+.estado-pendiente {
+    background-color: #ffcccc;
+    color: #cc0000;
+}
+
+.estado-entregado {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.estado-vencido {
+    background-color: #343a40;
+    color: #ffffff;
+    border: 2px solid red;
+}
+
+.btn-devolver {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.btn-devolver:hover {
+    background-color: #218838;
+}
+
+
+/*Gestion prestamos activos: */
+
+.oculto-inicial {
+    display: none !important;
+}
+
+#contenedor-gestion-prestamos {
+    width: 90%;
+    margin: 30px auto;
+    background-color: #ece8e8;
+    border-radius: 15px;
+    padding: 20px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    font-family: 'Arial', Helvetica, sans-serif;
+}
+
+.tabla-gestion {
+    width: 100%;
+    overflow-x: auto; /* evita desborde horizontal */
+}
+
+.tabla-gestion table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+.tabla-gestion th,
+.tabla-gestion td {
+    word-wrap: break-word;
+    white-space: normal;
+    text-align: center;
+    font-size: medium;
+}
+
+/* Ajuste de ancho de columnas - Gestión de Préstamos */
+.tabla-gestion th:nth-child(1),
+.tabla-gestion td:nth-child(1) {
+    width: 25%; /* Usuario */
+}
+
+.tabla-gestion th:nth-child(2),
+.tabla-gestion td:nth-child(2) {
+    width: 35%; /* Libros */
+}
+
+.tabla-gestion th:nth-child(3),
+.tabla-gestion td:nth-child(3) {
+    width: 15%; /* Fecha */
+}
+
+.tabla-gestion th:nth-child(4),
+.tabla-gestion td:nth-child(4) {
+    width: 15%; /* Estado */
+}
+
+.tabla-gestion th:nth-child(5),
+.tabla-gestion td:nth-child(5) {
+    width: 10%; /* Acción */
+}
